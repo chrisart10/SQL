@@ -1,0 +1,305 @@
+--SQL For Datasciencist (Personal Notebook)
+/*
+concepts:
+'Transaction' refers to the usage of a database. 
+'Relational' refers to the way in which a given database stores data.
+-----------------------------------------------------------------------------------------
+Modeling>
+To model the data that they need the Business Analyst will firstly 
+define the different logical “things” or entities/concepts that they 
+want to capture data about. Entities can be people, places, products 
+or anything that is tangible in some way.
+
+Attributes>
+Once you have identified the concepts or entities that you would like 
+to capture data for, the next steps is what specifically do you want to 
+capture for each entity in terms of attributes.
+Example:
+Employee = Attributes could include: (Name, Address line 1, Address 
+line 2, Date of Birth, City, Country, Phone Number)
+
+Relationships>
+Now that you have identified the entities and the attributes, it is time
+to consider how each entity relates to each other. The relationships between 
+entities are the significant relationships between each other. 
+Example: 
+In our scenario the Employee entity and the Job Role Entity have a direct 
+relationship of the Employee performs the Job Role. The Job Role is performed 
+by the Employee.
+
+
+-----------------------------------------------------------------------------------------
+*/
+
+/*
+datatype:
+
+INTEGER> --Affinity
+INT
+INTEGER
+TINYINT
+SMALLINT
+MEDIUMINT
+BIGINT
+UNSIGNED BIG INT
+INT2
+INT8
+
+TEXT> --Affinity
+CHARACTER(20)
+VARCHAR(255)
+VARYING CHARACTER(255)
+NCHAR(55)
+NATIVE CHARACTER(70)
+NVARCHAR(100)
+TEXT
+CLOB
+
+NONE> --Affinity
+BLOB
+no datatype specified
+
+NUMERIC> --Affinity
+DECIMAL(10,5)
+BOOLEAN
+DATE
+DATETIME
+NUMERIC
+*/
+--Command List with examples:
+
+--TABLE 1
+--1- CREATE:
+
+CREATE TABLE COMPANY(
+   ID INT PRIMARY KEY     NOT NULL,
+   NAME           TEXT    NOT NULL,
+   AGE            INT     NOT NULL,
+   ADDRESS        CHAR(50),
+   SALARY         REAL
+);
+
+--2- INSERT:
+
+INSERT INTO COMPANY (ID,NAME,AGE,ADDRESS,SALARY)
+VALUES (1, 'Paul', 32, 'California', 20000.00 );
+
+INSERT INTO COMPANY (ID,NAME,AGE,ADDRESS,SALARY)
+VALUES (2, 'Allen', 25, 'Texas', 15000.00 );
+
+INSERT INTO COMPANY (ID,NAME,AGE,ADDRESS,SALARY)
+VALUES (3, 'Teddy', 23, 'Norway', 20000.00 );
+
+INSERT INTO COMPANY (ID,NAME,AGE,ADDRESS,SALARY)
+VALUES (4, 'Mark', 25, 'Rich-Mond ', 65000.00 );
+
+INSERT INTO COMPANY (ID,NAME,AGE,ADDRESS,SALARY)
+VALUES (5, 'David', 27, 'Texas', 85000.00 );
+
+INSERT INTO COMPANY (ID,NAME,AGE,ADDRESS,SALARY)
+VALUES (6, 'Kim', 22, 'South-Hall', 45000.00 );
+
+otherwise:
+INSERT INTO COMPANY VALUES (7, 'James', 24, 'Houston', 10000.00 );
+
+
+--TABLE 2
+CREATE TABLE DEPARTMENT(
+   ID INT PRIMARY KEY      NOT NULL,
+   DEPT           CHAR(50) NOT NULL,
+   EMP_ID         INT      NOT NULL
+);
+
+INSERT INTO DEPARTMENT (ID, DEPT, EMP_ID)
+VALUES (1, 'IT Billing', 1 );
+
+INSERT INTO DEPARTMENT (ID, DEPT, EMP_ID)
+VALUES (2, 'Engineering', 2 );
+
+INSERT INTO DEPARTMENT (ID, DEPT, EMP_ID)
+VALUES (3, 'Finance', 7 );
+
+
+
+
+--3- SELECT:
+
+SELECT * FROM table_name; 							--select all columns from table.
+SELECT column1, column2, columnN FROM table_name; 	--select specifict column from table.
+
+--4- WHERE:
+
+SELECT column1, column2, columnN 
+FROM table_name
+WHERE [condition];
+
+--OR,AND,>,!=,==,LIKE,NOT,type,IN,>=,<=BETWEEN,GLOB,<>,
+
+SELECT * FROM COMPANY WHERE AGE >= 25 AND SALARY >= 65000; --filter where age >= 25 and salary >=65000
+SELECT * FROM COMPANY WHERE AGE >= 25 OR SALARY >= 65000;  --filter where age >= 25 or salary >=65000
+SELECT * FROM COMPANY WHERE AGE IS NOT NULL;			   --filter not null records.
+SELECT * FROM COMPANY WHERE NAME LIKE 'Ki%';			   --filter if NAME start with 'Ki%'
+SELECT * FROM COMPANY WHERE NAME GLOB 'Ki*';	  		   --filter if NAME starts with 'Ki' 'Ki%'
+SELECT * FROM COMPANY WHERE AGE IN ( 25, 27 );			   --Following SELECT statement lists down all the records where AGE value is either 25 or 27.
+SELECT * FROM COMPANY WHERE AGE NOT IN ( 25, 27 );		   --Following SELECT statement lists down all the records where AGE value is neither 25 nor 27.
+SELECT * FROM COMPANY WHERE AGE BETWEEN 25 AND 27;		   --Following SELECT statement lists down all the record
+SELECT tbl_name FROM sqlite_master WHERE type = 'table';   --get info of database
+--others querys: 
+
+SELECT *
+FROM COMPANY
+WHERE NAME IN ("James", "Allen", "Teddy") AND ADDRESS <> "Florida";
+
+SELECT * 
+FROM COMPANY 
+WHERE NOT(AGE =24 OR AGE = 25)
+AND ADDRESS <> "Florida";
+
+   
+SELECT * FROM COMPANY 
+WHERE AGE > (SELECT AGE FROM COMPANY WHERE SALARY > 65000);  --subqueries 
+   
+
+--5- WILDCARD:
+SELECT * 				
+FROM COMPANY
+WHERE NAME like "%e%";
+
+--6- EXISTS:
+SELECT AGE FROM COMPANY 
+WHERE EXISTS (SELECT AGE FROM COMPANY WHERE SALARY > 65000);
+
+--7.ORDER BY:
+SELECT * FROM COMPANY ORDER BY SALARY ASC;
+SELECT * FROM COMPANY ORDER BY NAME DESC;
+
+--8-ALTER:
+ALTER TABLE table_name
+ADD column_name datatype; 	--ADD a new column
+
+--9-operators:
+
+--order parentheses>exponents>multiplication>division>adition>subtraction 
+
+SELECT AGE,
+(AGE / 2) AS AGE2
+FROM COMPANY;
+
+--10-Agregate function:
+
+AVG(),MIN(),MAX(),SUM(),COUNT.
+
+SELECT avg(AGE) FROM COMPANY
+SELECT min(AGE) FROM COMPANY
+SELECT max(AGE) FROM COMPANY
+SELECT sum(AGE) FROM COMPANY
+SELECT count(AGE) FROM COMPANY
+
+--11- DISTINCT:
+--used in conjunction with SELECT statement to eliminate all the duplicate records and fetching only the unique records.
+SELECT DISTINCT name FROM COMPANY;
+
+--12- GROUP BY:
+--first insert some data (necesary to see changes)
+INSERT INTO COMPANY VALUES (9, 'Paul', 24, 'Houston', 20000.00 );
+INSERT INTO COMPANY VALUES (10, 'James', 44, 'Norway', 5000.00 );
+INSERT INTO COMPANY VALUES (11, 'James', 45, 'Texas', 5000.00 );
+
+SELECT NAME, SUM(SALARY) FROM COMPANY GROUP BY NAME;
+
+--13- HAVING
+
+--Following is the position of HAVING clause in a SELECT query.
+/*
+SELECT
+FROM
+WHERE
+GROUP BY
+HAVING
+ORDER BY
+*/
+
+SELECT * FROM COMPANY GROUP BY name HAVING count(name) > 1; -- get people wich number in the column "NAME" is major than 1 
+SELECT * FROM COMPANY GROUP BY name HAVING count(*) > 1; 	-- otherwise. same result as first example
+
+SELECT * FROM COMPANY GROUP BY name HAVING count(name) = 4;	-- get people wich number in the column "NAME" is iqual to 4
+
+-- ADVANCED
+--14- SUBQUERIES
+
+SELECT *
+FROM COMPANY
+WHERE ID IN (
+		SELECT ID
+		FROM COMPANY
+		WHERE SALARY > 45000
+		);	  
+	  
+SELECT NAME
+	,AGE
+FROM COMPANY
+WHERE ID IN (
+		SELECT ID
+		FROM COMPANY
+		WHERE SALARY > 45000
+			AND AGE != 25
+		);
+
+--15-ALIAS:
+SELECT AGE as edad FROM COMMENT
+
+--16- JOINS:
+--cross join
+SELECT EMP_ID, NAME, DEPT FROM COMPANY CROSS JOIN DEPARTMENT;
+--inner join
+SELECT EMP_ID, NAME, DEPT FROM COMPANY INNER JOIN DEPARTMENT
+   ON COMPANY.ID = DEPARTMENT.EMP_ID;
+
+--left join
+SELECT EMP_ID, NAME, DEPT FROM COMPANY LEFT OUTER JOIN DEPARTMENT
+   ON COMPANY.ID = DEPARTMENT.EMP_ID;
+   
+--16- UNION
+
+SELECT EMP_ID, NAME, DEPT FROM COMPANY INNER JOIN DEPARTMENT
+         ON COMPANY.ID = DEPARTMENT.EMP_ID
+         
+         UNION
+         
+         SELECT EMP_ID, NAME, DEPT FROM COMPANY LEFT OUTER JOIN DEPARTMENT
+         ON COMPANY.ID = DEPARTMENT.EMP_ID;
+
+-- 17- Text String manipulation:
+
+Select trim ("hello World" ) as First_trim
+
+Select NAME,ADDRESS,Name || " is From " || ADDRESS as Name_and_Address --concatenates record of a column
+From COMPANY
+
+SELECT substr(NAME,1,3) as SN FROM COMPANY
+SELECT NAME,upper(NAME) as UPPERCASE FROM COMPANY
+SELECT NAME,lower(NAME) as LOWERCASE FROM COMPANY
+--18- Date And Time:
+
+SELECT date('now')
+
+SELECT date('now','start of month','+1 month','-1 day');
+
+--19- CASE:
+SELECT NAME,AGE,
+CASE
+WHEN AGE < 30 THEN 'NO Boomer'
+ELSE 'Boomer'
+END Category
+FROM COMPANY
+
+
+/*
+Source : 
+1 https://www.tutorialspoint.com/sqlite/index.htm
+2 http://business-analysis-excellence.com/what-is-data-modeling/
+3 https://www.coursera.org/learn/sql-for-data-science
+tools for format:
+https://poorsql.com/
+
+*/
